@@ -5,7 +5,7 @@ VisualStudioVersion = 17.7.34009.444
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "[SMS] Ship Management System TSS", "[SMS] Ship Management System TSS\[SMS] Ship Management System TSS.csproj", "{72BB763E-FF95-4221-879D-46D91B86A12D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "[SMS] Ship Management System Sript", "[SMS] Ship Management System Sript\[SMS] Ship Management System Sript.csproj", "{C65731B0-D480-40BA-A7E8-22444FC4BAF5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "[SMS] Ship Management System Script", "[SMS] Ship Management System Script\[SMS] Ship Management System Script.csproj", "{C65731B0-D480-40BA-A7E8-22444FC4BAF5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
