@@ -38,6 +38,8 @@
   <Import Project="MDK/MDK.options.props" />
   <Import Project="MDK/MDK.paths.props" Condition="exists('MDK/MDK.paths.props')" />
   <ItemGroup>
+    <Compile Include="DebugLogs.cs" />
+    <Compile Include="IShipModule.cs" />
     <Compile Include="MDK\Bootstrapper.cs" />
     <AdditionalFiles Include="MDK\MDK.options.props">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -45,10 +47,14 @@
     <AdditionalFiles Include="MDK\MDK.paths.props">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </AdditionalFiles>
+    <Compile Include="ModuleActions.cs" />
     <Compile Include="Program.cs" />
     <AdditionalFiles Include="Instructions.readme" />
     <AdditionalFiles Include="thumb.png" />
     <AdditionalFiles Include="MDK\whitelist.cache" />
+    <Compile Include="ScriptExceptions.cs" />
+    <Compile Include="ShipModules.cs" />
+    <Compile Include="StateMachine.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="AfterBuild">
