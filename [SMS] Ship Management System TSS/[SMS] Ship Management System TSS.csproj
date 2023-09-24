@@ -52,39 +52,32 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="netstandard">
-      <Private>False</Private>
-    </Reference>
+    <Reference Include="netstandard" />
     <Reference Include="ProtoBuf.Net.Core">
-      <HintPath>D:\SteamLibrary\steamapps\common\SpaceEngineers\Bin64\ProtoBuf.Net.Core.dll</HintPath>
+      <HintPath>..\GameBinaries\ProtoBuf.Net.Core.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Sandbox.Common">
-      <HintPath>D:\SteamLibrary\steamapps\common\SpaceEngineers\Bin64\Sandbox.Common.dll</HintPath>
+      <HintPath>..\GameBinaries\Sandbox.Common.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Sandbox.Game">
-      <HintPath>D:\SteamLibrary\steamapps\common\SpaceEngineers\Bin64\Sandbox.Game.dll</HintPath>
+      <HintPath>..\GameBinaries\Sandbox.Game.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Sandbox.Graphics">
-      <HintPath>D:\SteamLibrary\steamapps\common\SpaceEngineers\Bin64\Sandbox.Graphics.dll</HintPath>
+      <HintPath>..\GameBinaries\Sandbox.Graphics.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="SpaceEngineers.Game">
-      <HintPath>D:\SteamLibrary\steamapps\common\SpaceEngineers\Bin64\SpaceEngineers.Game.dll</HintPath>
+      <HintPath>..\GameBinaries\SpaceEngineers.Game.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="SpaceEngineers.ObjectBuilders">
-      <HintPath>D:\SteamLibrary\steamapps\common\SpaceEngineers\Bin64\SpaceEngineers.ObjectBuilders.dll</HintPath>
+      <HintPath>..\GameBinaries\SpaceEngineers.ObjectBuilders.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="System.Collections.Immutable, Version=7.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>D:\SteamLibrary\steamapps\common\SpaceEngineers\Bin64\System.Collections.Immutable.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System.Core">
@@ -109,31 +102,31 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="VRage">
-      <HintPath>D:\SteamLibrary\steamapps\common\SpaceEngineers\Bin64\VRage.dll</HintPath>
+      <HintPath>..\GameBinaries\VRage.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="VRage.Game">
-      <HintPath>D:\SteamLibrary\steamapps\common\SpaceEngineers\Bin64\VRage.Game.dll</HintPath>
+      <HintPath>..\GameBinaries\VRage.Game.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="VRage.Input">
-      <HintPath>D:\SteamLibrary\steamapps\common\SpaceEngineers\Bin64\VRage.Input.dll</HintPath>
+      <HintPath>..\GameBinaries\VRage.Input.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="VRage.Library">
-      <HintPath>D:\SteamLibrary\steamapps\common\SpaceEngineers\Bin64\VRage.Library.dll</HintPath>
+      <HintPath>..\GameBinaries\VRage.Library.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="VRage.Math">
-      <HintPath>D:\SteamLibrary\steamapps\common\SpaceEngineers\Bin64\VRage.Math.dll</HintPath>
+      <HintPath>..\GameBinaries\VRage.Math.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="VRage.Render">
-      <HintPath>D:\SteamLibrary\steamapps\common\SpaceEngineers\Bin64\VRage.Render.dll</HintPath>
+      <HintPath>..\GameBinaries\VRage.Render.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="VRage.Render11">
-      <HintPath>D:\SteamLibrary\steamapps\common\SpaceEngineers\Bin64\VRage.Render11.dll</HintPath>
+      <HintPath>..\GameBinaries\VRage.Render11.dll</HintPath>
       <Private>False</Private>
     </Reference>
   </ItemGroup>
@@ -146,8 +139,7 @@
     <Compile Include="SMSTSS.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Analyzer Include="..\..\SEWhitelistChecker.dll" />
+    <PackageReference Include="Mal.Mdk2.Analyzers" Version="*" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
