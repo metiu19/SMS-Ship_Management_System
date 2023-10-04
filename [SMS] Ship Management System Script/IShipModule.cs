@@ -42,37 +42,45 @@ namespace IngameScript
             /// Check if current state equals expected state, if no force it
             /// </summary>
             /// <returns>If the state was forced</returns>
-            bool CheckState();
+            int CheckState();
             /// <summary>
             /// Toggle the state of the module
             /// </summary>
-            void ToggleState();
+            int ToggleState();
             /// <summary>
             /// Set the state of the module
             /// </summary>
-            void SetState(bool state);
+            int SetState(bool state);
             /// <summary>
             /// Try to fix the module if in error status
             /// </summary>
-            void TryFixError();
+            /// <returns>Returns if the module was fixed</returns>
+            int TryFixError();
 
+            /// <summary>
+            /// Get all the properties of this module
+            /// </summary>
+            /// <returns>A dictionary with all the properties names and the correspondig states</returns>
+            Dictionary<string, bool> GetProperties();
             /// <summary>
             /// Get the state of a property
             /// </summary>
             /// <param name="propertyName">The name of the property</param>
-            /// <returns>The state of the property</returns>
-            bool GetProperty(string propertyName);
+            /// <returns>The state of the property, null if property doesn't exist</returns>
+            bool? GetProperty(string propertyName);
             /// <summary>
             /// Toggle the state of a property
             /// </summary>
             /// <param name="propertyName">The name of the property</param>
-            void ToggleProperty(string propertyName);
+            /// <returns>null if property doesn't exist, true/false if successfull or not</returns>
+            int ToggleProperty(string propertyName);
             /// <summary>
             /// Set the state of a property
             /// </summary>
             /// <param name="propertyName">The name of the property</param>
             /// <param name="state">The state to set</param>
-            void SetProperty(string propertyName, bool state);
+            /// <returns>null if property doesn't exist, true/false if successfull or not</returns>
+            int SetProperty(string propertyName, bool state);
         }
     }
 }

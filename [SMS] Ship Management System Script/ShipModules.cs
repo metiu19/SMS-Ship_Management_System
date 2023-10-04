@@ -185,7 +185,7 @@ namespace IngameScript
             }
 
 
-            public bool CheckState()
+            public int CheckState()
             {
                 echo($"Checking state of module: {Name}");
                 if (State == States.ComingUp && lastActionIndex == (startupActions.Count - 1) && program.Time > delayTarget)
@@ -194,59 +194,77 @@ namespace IngameScript
                     State = States.Enabled;
                     enabled = true;
                     ForceState();
-                    return true;
+                    return 2;
                 }
-                else if (State == States.GoingDown && lastActionIndex == (startupActions.Count - 1) && program.Time > delayTarget)
+                else if (State == States.GoingDown && lastActionIndex == (shutdownActions.Count - 1) && program.Time > delayTarget)
                 {
                     echo("Changing module state!");
                     State = States.Disabled;
                     delayTarget = program.Time + cooldownDelay;
-                    return false;
+                    return 3;
                 }
 
-                bool needsChange = NeedsStateChange();
-                if (needsChange)
+                if (NeedsStateChange())
+                {
                     ForceState();
-                return needsChange;
+                    return 1;
+                }
+                return 0;
             }
 
             protected abstract bool NeedsStateChange();
 
             protected abstract void ForceState();
 
-            public void ToggleState()
-            {
-                if (State == States.Error || State == States.ComingUp || State == States.GoingDown)
-                {
-                    echo($"Action not available in the current state!\nCurrent State: {StatesNames[State]}");
-                    return;
-                }
-                if (State == States.Disabled)
-                    Startup();
-                else if (State == States.Enabled)
-                    Shutdown();
-            }
-
-            public void SetState(bool state)
+            public int ToggleState()
             {
                 if (program.Time < delayTarget)
                 {
                     echo($"Action not available!\nWait: {delayTarget - program.Time} s");
-                    return;
+                    return -1;
+                }
+
+                if (State == States.Disabled)
+                    Startup();
+                else if (State == States.Enabled)
+                    Shutdown();
+                else
+                {
+                    echo($"Action not available in the current state!\nCurrent State: {StatesNames[State]}");
+                    return -2;
+                }
+                return 1;
+            }
+
+            public int SetState(bool state)
+            {
+                if (program.Time < delayTarget)
+                {
+                    echo($"Action not available!\nWait: {delayTarget - program.Time} s");
+                    return -1;
                 }
 
                 if (State == States.Error || State == States.ComingUp || State == States.GoingDown)
                 {
                     echo($"Action not available in the current state!\nCurrent State: {StatesNames[State]}");
-                    return;
+                    return -2;
                 }
 
                 if (state && State == States.Disabled)
+                {
                     Startup();
+                    return 1;
+                }
                 else if (!state && State == States.Enabled)
+                {
                     Shutdown();
+                    return 2;
+                }
                 else
-                    echo($"Can't startup module {Name} - Current State: {StatesNames[State]}");
+                {
+                    echo($"Can't change module {Name} state - Current State: {StatesNames[State]}");
+                    return -3;
+                }
             }
 
             private void Startup()
@@ -265,7 +283,7 @@ namespace IngameScript
                 lastActionIndex = -1;
             }
 
-            public void TryFixError()
+            public int TryFixError()
             {
                 bool allGreen = true;
                 foreach (var property in properties)
@@ -280,63 +298,69 @@ namespace IngameScript
                         State = States.Enabled;
                     else
                         State = States.Disabled;
+                    return 1;
                 }
-                else
-                    echo("Could not restore default state!\nNot all properties were reseted to the default value");
+                echo("Could not restore default state!\nNot all properties were reseted to the default value");
+                return 0;
             }
 
 
-            public bool GetProperty(string propertyName)
+            public Dictionary<string, bool> GetProperties()
             {
-                var property = properties.Find(p => p.Name == propertyName);
-                if (property == null)
-                    return false;
-                return property.State;
+                Dictionary<string, bool> properties = new Dictionary<string, bool>();
+                this.properties.ForEach(p => properties.Add(p.Name, p.State));
+                return properties;
             }
 
-            public void ToggleProperty(string propertyName)
+            public bool? GetProperty(string propertyName)
+            {
+                return properties.Find(p => p.Name == propertyName)?.State;
+            }
+
+            public int ToggleProperty(string propertyName)
             {
                 if (program.Time < delayTarget)
                 {
                     echo($"Action not available!\nWait: {delayTarget - program.Time} s");
-                    return;
+                    return -1;
                 }
 
                 if (!(State == States.Error || State == States.GoingDown || State == States.ComingUp))
                 {
                     echo($"Action not available in the current state!\nState: {StatesNames[State]}");
-                    return;
+                    return -2;
                 }
 
                 var property = properties.Find(p => p.Name == propertyName);
                 if (property == null)
-                    return;
+                    return -3;
 
-                SetProperty(property, !property.State);
+                return SetProperty(property, !property.State);
             }
 
-            public void SetProperty(string propertyName, bool state)
+            public int SetProperty(string propertyName, bool state)
             {
                 if (program.Time < delayTarget)
                 {
                     echo($"Action not available!\nWait: {delayTarget - program.Time} s");
-                    return;
+                    return -1;
                 }
 
                 if (!(State == States.Error || State == States.GoingDown || State == States.ComingUp))
                 {
                     echo($"Action not available in the current state!\nState: {StatesNames[State]}");
-                    return;
+                    return -2;
                 }
 
                 var property = properties.Find(p => p.Name == propertyName);
                 if (property == null)
-                    return;
+                    return -3;
 
-                SetProperty(property, state);
+                
+                return SetProperty(property, state);
             }
 
-            private void SetProperty(ModuleProperty property, bool propertyState)
+            private int SetProperty(ModuleProperty property, bool propertyState)
             {
                 if (State == States.ComingUp)
                 {
@@ -345,13 +369,13 @@ namespace IngameScript
                     {
                         echo($"Wrong property! Sequence not respected!");
                         State = States.Error;
-                        return;
+                        return -4;
                     }
                     if (nextAction.NeededState != propertyState)
                     {
                         echo($"Wrong state! Sequence not respected!");
                         State = States.Error;
-                        return;
+                        return -5;
                     }
                 }
                 else if (State == States.GoingDown)
@@ -361,13 +385,13 @@ namespace IngameScript
                     {
                         echo($"Wrong property! Sequence not respected!");
                         State = States.Error;
-                        return;
+                        return -4;
                     }
                     if (nextAction.NeededState != propertyState)
                     {
                         echo($"Wrong state! Sequence not respected!");
                         State = States.Error;
-                        return;
+                        return -5;
                     }
                 }
 
@@ -377,6 +401,7 @@ namespace IngameScript
                     delayTarget = program.Time + property.StartupDelay;
 
                 property.State = propertyState;
+                return 1;
             }
         }
 
