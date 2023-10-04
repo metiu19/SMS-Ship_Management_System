@@ -54,6 +54,7 @@
     <AdditionalFiles Include="MDK\whitelist.cache" />
     <Compile Include="ScriptExceptions.cs" />
     <Compile Include="ShipModules.cs" />
+    <Compile Include="SMSAPI.cs" />
     <Compile Include="StateMachine.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

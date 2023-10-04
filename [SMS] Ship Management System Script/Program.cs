@@ -36,6 +36,7 @@ namespace IngameScript
         private readonly List<IShipModule> ShipModules = new List<IShipModule>();
         private readonly MyCommandLine CommandLine = new MyCommandLine();
         private readonly Dictionary<string, Action> Commands = new Dictionary<string, Action>(StringComparer.OrdinalIgnoreCase);
+        private readonly SMSAPI tssAPI;
 
         public Program()
         {
@@ -54,6 +55,11 @@ namespace IngameScript
             MyIniParseResult result;
             if (!Ini.TryParse(Me.CustomData, out result))
                 ExceptionsManager.AddMyIniParseException(result);
+
+            // Init TSS API
+            tssAPI = new SMSAPI(this);
+            if (tssAPI == null)
+                ExceptionsManager.AddException("TSSAPIException: Couldn't init TSS API!");
 
             // General Configs
             forceState = Ini.Get("SMS - General", "Force State").ToBoolean(true);
@@ -85,6 +91,10 @@ namespace IngameScript
 
             // Throw any exceptions
             ExceptionsManager.ThrowExceptions();
+
+            // Register PB with TSS API
+            tssAPI.ResetApp();
+            tssAPI.RegisterPB();
 
             // Setup state machine
             CoRoutines = new StateMachine(this);
@@ -119,7 +129,7 @@ namespace IngameScript
                 CheckModulesState();
 
             // Handle Commands
-            if ((updateSource & (UpdateType.Script | UpdateType.Terminal | UpdateType.Trigger)) > 0)
+            if ((updateSource & (UpdateType.Script | UpdateType.Terminal | UpdateType.Trigger | UpdateType.Mod)) > 0)
             {
                 if (CommandLine.TryParse(argument))
                 {
@@ -151,6 +161,8 @@ namespace IngameScript
                 Echo("Command missing arguments");
                 return;
             }
+
+            tssAPI.SetCommandOutput("", false, CommandLine.Argument(2), CommandLine.Argument(3));
 
             string subCommand = CommandLine.Argument(1);
             Echo($"Runned sub-command: {subCommand}");
@@ -245,6 +257,8 @@ namespace IngameScript
                 return;
             }
 
+            tssAPI.SetCommandOutput("", false, CommandLine.Argument(2), CommandLine.Argument(4));
+
             string subCommand = CommandLine.Argument(1);
             Echo($"Runned sub-command: {subCommand}");
             switch (subCommand)
@@ -327,6 +341,16 @@ namespace IngameScript
                 yield return true;
             }
             ExceptionsManager.ThrowExceptions();
+            foreach (IShipModule module in ShipModules)
+            {
+                tssAPI.RegisterModule(module.Name, (int)module.State, module.GetProperties());
+                yield return true;
+            }
+            if (!tssAPI.LoadModules())
+            {
+                ExceptionsManager.AddException("TSSAPIException: Modules load failed!");
+            ExceptionsManager.ThrowExceptions();
+        }
         }
 
         private void CheckModulesState()
