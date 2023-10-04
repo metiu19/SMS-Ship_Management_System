@@ -1,5 +1,5 @@
 ﻿using Sandbox.ModAPI;
-using SMS.API;
+using SMS.TouchAPI;
 using VRage.Game.ModAPI;
 using VRageMath;
 

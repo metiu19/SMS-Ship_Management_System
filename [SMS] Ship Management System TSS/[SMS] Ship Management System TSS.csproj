@@ -131,8 +131,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="API\TouchScreenAPI.cs" />
-    <Compile Include="API\TouchUIKit.cs" />
+    <Compile Include="TouchAPI\TouchScreenAPI.cs" />
+    <Compile Include="TouchAPI\TouchUIKit.cs" />
     <Compile Include="SessionComponent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SMSApp.cs" />

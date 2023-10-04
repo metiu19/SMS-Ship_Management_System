@@ -5,7 +5,7 @@ using VRageMath;
 using IngameIMyTextSurface = Sandbox.ModAPI.Ingame.IMyTextSurface;
 using IngameIMyCubeBlock = VRage.Game.ModAPI.Ingame.IMyCubeBlock;
 
-namespace SMS.API
+namespace SMS.TouchAPI
 {
     /// <summary>
     /// The client API for Touch Screen and Touch Ui Kit feature.

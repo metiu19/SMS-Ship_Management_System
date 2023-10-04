@@ -1,5 +1,5 @@
 ﻿using Sandbox.ModAPI;
-using SMS.API;
+using SMS.TouchAPI;
 using VRage.Game.Components;
 
 namespace SMS
@@ -8,7 +8,7 @@ namespace SMS
     public class SMSMod : MySessionComponentBase
     {
         public static SMSMod Instance;
-        public TouchUiKit API { get; private set; }
+        public TouchUiKit TouchAPI { get; private set; }
 
         public override void LoadData()
         {
@@ -16,13 +16,13 @@ namespace SMS
                 return;
 
             Instance = this;
-            API = new TouchUiKit();
-            API.Load();
+            TouchAPI = new TouchUiKit();
+            TouchAPI.Load();
         }
 
         protected override void UnloadData()
         {
-            API?.Unload();
+            TouchAPI?.Unload();
             Instance = null;
         }
     }

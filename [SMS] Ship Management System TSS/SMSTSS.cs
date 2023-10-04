@@ -36,7 +36,7 @@ namespace SMS
 
         void Init()
         {
-            if (!SMSMod.Instance.API.IsReady)
+            if (!SMSMod.Instance.TouchAPI.IsReady)
                 return;
 
             if (init)

@@ -8,7 +8,7 @@ using IngameIMyTextSurface = Sandbox.ModAPI.Ingame.IMyTextSurface;
 using IngameIMyCubeBlock = VRage.Game.ModAPI.Ingame.IMyCubeBlock;
 using IngameIMyBlockGroup = Sandbox.ModAPI.Ingame.IMyBlockGroup;
 
-namespace SMS.API
+namespace SMS.TouchAPI
 {
     /// <summary>
     /// The client API for Touch Screen feature.
