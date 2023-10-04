@@ -47,6 +47,8 @@ namespace SMS
             App.Theme.Scale = Math.Min(Math.Max(Math.Min(this.Surface.SurfaceSize.X, this.Surface.SurfaceSize.Y) / 512, 0.4f), 2);
             App.Cursor.Scale = App.Theme.Scale;
 
+            SMSMod.Instance.TSSInstances.Add(this);
+
             terminalBlock.OnMarkForClose += BlockMarkedForClose;
         }
 
@@ -58,7 +60,7 @@ namespace SMS
         public override void Dispose()
         {
             base.Dispose();
-
+            SMSMod.Instance.TSSInstances.Remove(this);
             terminalBlock.OnMarkForClose -= BlockMarkedForClose;
         }
 

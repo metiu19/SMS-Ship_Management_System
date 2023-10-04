@@ -133,6 +133,8 @@
   <ItemGroup>
     <Compile Include="TouchAPI\TouchScreenAPI.cs" />
     <Compile Include="TouchAPI\TouchUIKit.cs" />
+    <Compile Include="PBAPIDelegates.cs" />
+    <Compile Include="PBInterface.cs" />
     <Compile Include="SessionComponent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SMSApp.cs" />
