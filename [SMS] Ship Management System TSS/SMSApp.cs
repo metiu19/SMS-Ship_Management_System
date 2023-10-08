@@ -16,6 +16,8 @@ namespace SMS
         public readonly string ID;
 
         readonly string version = "v0.0.1";
+        readonly IMyTerminalBlock terminalBlock;
+        string[] neededModules;
         bool init = false;
         View window;
         Switch modulesSwitch;
@@ -23,6 +25,9 @@ namespace SMS
         public SMSApp(IMyCubeBlock block, IMyTextSurface surface) : base(block, surface)
         {
             ID = block.EntityId.ToString();
+            terminalBlock = block as IMyTerminalBlock;
+            neededModules = terminalBlock.CustomData.Split('\n');
+
             Modules = new List<Module>();
 
             DefaultBg = true;
@@ -31,9 +36,19 @@ namespace SMS
             windowBar.BgColor = Color.DarkCyan;
             windowBar.Label.TextColor = Color.White;
 
-            window = new View();
-            window.Border = new Vector4(3);
-            window.Padding = new Vector4(10);
+            window = new View
+            {
+                Border = new Vector4(3),
+                Padding = new Vector4(10)
+            };
+
+            var recompilePBText = new Label("Recompile PB to get modules info!")
+            {
+                FontSize = 0.8f,
+                TextColor = Color.Orange,
+                SelfAlignment = ViewAlignment.Center
+            };
+            window.AddChild(recompilePBText);
 
             AddChild(windowBar);
             AddChild(window);
@@ -41,18 +56,20 @@ namespace SMS
 
         public void RegisterModule(string moduleName, int moduleState, Dictionary<string, bool> properties)
         {
-            if (!init)
+            if (!init && neededModules.Contains(moduleName))
                 Modules.Add(new Module(moduleName, moduleState, properties, this));
         }
 
         public bool LoadModules()
         {
-            if (Modules.Count == 0)
+            if (neededModules.Length > 0 && Modules.Count == 0)
                 return false;
 
             if (init)
                 return false;
             init = true;
+
+            window.RemoveChild(0);
 
             string[] modulesNames = new string[Modules.Count];
             for (int x = 0; x < Modules.Count; x++)
@@ -78,6 +95,7 @@ namespace SMS
             Modules = new List<Module>();
             init = false;
             window.Children.ForEach(c => window.RemoveChild(c));
+            neededModules = terminalBlock.CustomData.Split('\n');
         }
     }
 
@@ -104,9 +122,9 @@ namespace SMS
         };
 
         States state;
-        Button moduleState;
-        Label commandOutput;
-        Dictionary<Label, Button> properties;
+        readonly Button moduleState;
+        readonly Label commandOutput;
+        readonly Dictionary<Label, Button> properties;
 
         public Module(string name, int state, Dictionary<string, bool> properties, SMSApp app) : base(ViewDirection.Column)
         {
@@ -163,6 +181,10 @@ namespace SMS
         {
             this.state = (States)state;
             moduleState.Label.Text = StatesNames[this.state];
+            if (this.state == States.Error)
+                moduleState.Label.TextColor = Color.Red;
+            else
+                moduleState.Label.TextColor = Color.White;
         }
 
         public void SetPropertyState(string propertyName, bool state)
