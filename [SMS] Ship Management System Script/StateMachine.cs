@@ -27,12 +27,14 @@ namespace IngameScript
             private readonly Program program;
             private readonly List<IEnumerator<bool>> SerialQueue;
             private readonly List<IEnumerator<bool>> ParallelQueue;
+            private readonly int MaxParallelJobs;
 
-            public StateMachine(Program program)
+            public StateMachine(Program program, int maxParallelJobs = 5)
             {
                 this.program = program;
                 this.SerialQueue = new List<IEnumerator<bool>>();
                 this.ParallelQueue = new List<IEnumerator<bool>>();
+                this.MaxParallelJobs = maxParallelJobs;
             }
 
             public void AddToSerialQueue(IEnumerator<bool> function)
@@ -79,8 +81,15 @@ namespace IngameScript
 
             private void RunParallel()
             {
+                int runningJobs = 0;
                 foreach (IEnumerator<bool> stateMachine in ParallelQueue)
                 {
+                    if (runningJobs >= MaxParallelJobs)
+                    {
+                        program.Runtime.UpdateFrequency |= UpdateFrequency.Once;
+                        return;
+                    }
+
                     bool hasMoreSteps = stateMachine.MoveNext();
 
                     if (hasMoreSteps)
@@ -90,6 +99,8 @@ namespace IngameScript
                         stateMachine.Dispose();
                         ParallelQueue.Remove(stateMachine);
                     }
+
+                    runningJobs++;
                 }
             }
         }
