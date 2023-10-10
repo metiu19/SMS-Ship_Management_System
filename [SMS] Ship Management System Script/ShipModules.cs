@@ -47,6 +47,7 @@ namespace IngameScript
             protected readonly MyIni ini = new MyIni();
             protected readonly Dictionary<string, string> requiredKeys = new Dictionary<string, string>()
             {
+                {"name", "Name" },
                 {"props", "Properties" },
                 {"up", "Startup" },
                 {"down", "Shutdown"},
@@ -118,7 +119,6 @@ namespace IngameScript
                 if (!CheckModuleProperties(properties, startupActions))
                     exceptionsManager.AddModulePropertiesMissmatchException(Name);
                 echo($"Registered startup properties: {startupActions.Count}");
-
 
                 // Register shutdown actions
                 echo("Register shutdown actions");
@@ -416,8 +416,8 @@ namespace IngameScript
             /// <param name="program">Reference to the Program Object</param>
             public BlockModule(IMyFunctionalBlock block, Program program) : base(program)
             {
-                this.Name = block.CustomName;
                 this.sectionName = "SMS - Module";
+                this.Name = ini.Get(sectionName, "name").ToString("Undefined");
                 this.moduleBlock = block;
 
                 echo($"Registring block module: {Name}");
@@ -426,7 +426,7 @@ namespace IngameScript
                 if (!ini.TryParse(block.CustomData, out result))
                     exceptionsManager.AddMyIniParseException(result);
 
-                echo("Searching keys for block module");
+                echo("Searching keys");
                 List<MyIniKey> keys = new List<MyIniKey>();
                 ini.GetKeys(sectionName, keys);
                 foreach (MyIniKey key in keys)
@@ -434,7 +434,7 @@ namespace IngameScript
 
                 foreach (string keyName in requiredKeys.Values)
                     if (keys.Find(key => key.Name == keyName) == default(MyIniKey))
-                        exceptionsManager.AddMissingIniKeyException(Name, keyName);
+                        exceptionsManager.AddMissingIniKeyException(sectionName, keyName);
             }
 
 
@@ -462,22 +462,23 @@ namespace IngameScript
             /// <param name="program">Reference to the Program Object</param>
             public GroupModule(IMyBlockGroup group, MyIni ini, Program program) : base(ini, program)
             {
-                this.Name = group.Name;
-                this.sectionName = Name;
+                this.sectionName = group.Name;
                 group.GetBlocksOfType(this.moduleBlocks);
+
+                this.Name = ini.Get(sectionName, requiredKeys["name"]).ToString("Undefined");
 
                 echo($"Registring group module: {Name}");
                 echo($"Found {moduleBlocks.Count} blocks");
 
                 echo("Searching keys");
                 List<MyIniKey> keys = new List<MyIniKey>();
-                ini.GetKeys(Name, keys);
+                ini.GetKeys(sectionName, keys);
                 foreach (MyIniKey key in keys)
                     echo($"Found key: {key.Name}");
 
                 foreach (string keyName in requiredKeys.Values)
                     if (keys.Find(key => key.Name == keyName) == default(MyIniKey))
-                        exceptionsManager.AddMissingIniKeyException(Name, keyName);
+                        exceptionsManager.AddMissingIniKeyException(sectionName, keyName);
             }
 
 
