@@ -54,7 +54,7 @@ namespace IngameScript
             }
         }
 
-        public class ModuleProperty
+        public class ModuleProperty     //TODO: Add user friendly names for module properties
         {
             public readonly string Name;
             public readonly bool DefaultState;
@@ -91,9 +91,9 @@ namespace IngameScript
         public static bool TryParseState(string stateString, out bool state)
         {
             state = false;
-            if (stateString.Equals("set") || stateString.Equals("on"))
+            if (stateString.Equals("set", StringComparison.OrdinalIgnoreCase) || stateString.Equals("on", StringComparison.OrdinalIgnoreCase) || stateString.Equals("true", StringComparison.OrdinalIgnoreCase))
                 state = true;
-            else if (stateString.Equals("reset") || stateString.Equals("off"))
+            else if (stateString.Equals("reset", StringComparison.OrdinalIgnoreCase) || stateString.Equals("off", StringComparison.OrdinalIgnoreCase) || stateString.Equals("false", StringComparison.OrdinalIgnoreCase))
                 state = false;
             else
                 return false;

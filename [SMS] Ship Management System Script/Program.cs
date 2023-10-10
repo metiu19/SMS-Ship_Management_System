@@ -28,7 +28,7 @@ namespace IngameScript
         readonly bool debug;
         public readonly bool FullLog;
         public const string ScriptName = "[SMS] Ship Management System";
-        public const string ScriptVersion = "V0.1.8";
+        public const string ScriptVersion = "V0.2.0";
         public MyIni Ini = new MyIni();
         public DebugLogs DebugLogsHelper;
         public ScriptExceptions ExceptionsManager;
@@ -318,10 +318,12 @@ namespace IngameScript
                     break;
                 case "on":
                 case "set":
+                case "true":
                     SetModuleProperty(true);
                     break;
                 case "off":
                 case "reset":
+                case "false":
                     SetModuleProperty(false);
                     break;
                 default:
