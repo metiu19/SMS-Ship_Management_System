@@ -28,7 +28,7 @@ namespace IngameScript
         readonly bool debug;
         public readonly bool FullLog;
         public const string ScriptName = "[SMS] Ship Management System";
-        public const string ScriptVersion = "V0.1.7";
+        public const string ScriptVersion = "V0.1.8";
         public MyIni Ini = new MyIni();
         public DebugLogs DebugLogsHelper;
         public ScriptExceptions ExceptionsManager;
@@ -88,12 +88,13 @@ namespace IngameScript
                 ShipModules.Add(new BlockModule(block, this));
             }
             Echo($"Registered {ShipModules.Count} Single Block Modules");
+            var singleBlockModulesCount = ShipModules.Count;
             Echo("Registering Block Group Modules");
             foreach (IMyBlockGroup group in groupModules)
             {
                 ShipModules.Add(new GroupModule(group, Ini, this));
             }
-            Echo($"{ShipModules.Count} Modules Registered!");
+            Echo($"Registered {ShipModules.Count - singleBlockModulesCount} Block Group Modules");
 
             // Throw any exceptions
             ExceptionsManager.ThrowExceptions();
