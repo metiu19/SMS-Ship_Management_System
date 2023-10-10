@@ -26,8 +26,9 @@ namespace IngameScript
     {
         readonly bool forceState;
         readonly bool debug;
+        public readonly bool FullLog;
         public const string ScriptName = "[SMS] Ship Management System";
-        public const string ScriptVersion = "V0.1.6";
+        public const string ScriptVersion = "V0.1.7";
         public MyIni Ini = new MyIni();
         public DebugLogs DebugLogsHelper;
         public ScriptExceptions ExceptionsManager;
@@ -65,6 +66,7 @@ namespace IngameScript
             forceState = Ini.Get("SMS - General", "Force State").ToBoolean(true);
             debug = Ini.Get("SMS - General", "Debug").ToBoolean(false);
             DebugLogsHelper.Enable = debug;
+            FullLog = forceState & !debug;
 
             // Cache grid blocks whit script config
             Echo("Cache single block modules");
@@ -123,7 +125,7 @@ namespace IngameScript
 
         public void Main(string argument, UpdateType updateSource)
         {
-            Echo("Main runned!");
+            if (FullLog) Echo("Main runned!");
             Time += Runtime.TimeSinceLastRun.TotalSeconds;
 
             if ((updateSource & UpdateType.Once) > 0)

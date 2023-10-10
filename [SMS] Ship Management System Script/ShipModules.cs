@@ -187,7 +187,7 @@ namespace IngameScript
 
             public int CheckState()
             {
-                echo($"Checking state of module: {Name}");
+                if (program.FullLog) echo($"Checking state of module: {Name}");
                 if (State == States.ComingUp && lastActionIndex == (startupActions.Count - 1) && program.Time > delayTarget)
                 {
                     echo("Changing module state!");
