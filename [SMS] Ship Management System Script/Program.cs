@@ -28,7 +28,7 @@ namespace IngameScript
         readonly bool debug;
         public readonly bool FullLog;
         public const string ScriptName = "[SMS] Ship Management System";
-        public const string ScriptVersion = "V0.3.0";
+        public const string ScriptVersion = "V0.4.0";
         public MyIni Ini = new MyIni();
         public DebugLogs DebugLogsHelper;
         public ScriptExceptions ExceptionsManager;

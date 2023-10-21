@@ -417,14 +417,14 @@ namespace IngameScript
             public BlockModule(IMyFunctionalBlock block, Program program) : base(program)
             {
                 this.sectionName = "SMS - Module";
-                this.Name = ini.Get(sectionName, "name").ToString("Undefined");
-                this.moduleBlock = block;
-
-                echo($"Registring block module: {Name}");
-
                 MyIniParseResult result;
                 if (!ini.TryParse(block.CustomData, out result))
                     exceptionsManager.AddMyIniParseException(result);
+
+                this.Name = ini.Get(sectionName, requiredKeys["name"]).ToString(block.CustomName);
+                this.moduleBlock = block;
+
+                echo($"Registring block module: {Name}");
 
                 echo("Searching keys");
                 List<MyIniKey> keys = new List<MyIniKey>();
@@ -434,7 +434,7 @@ namespace IngameScript
 
                 foreach (string keyName in requiredKeys.Values)
                     if (keys.Find(key => key.Name == keyName) == default(MyIniKey))
-                        exceptionsManager.AddMissingIniKeyException(sectionName, keyName);
+                        exceptionsManager.AddMissingIniKeyException(Name, keyName);
             }
 
 
@@ -465,7 +465,7 @@ namespace IngameScript
                 this.sectionName = group.Name;
                 group.GetBlocksOfType(this.moduleBlocks);
 
-                this.Name = ini.Get(sectionName, requiredKeys["name"]).ToString("Undefined");
+                this.Name = ini.Get(sectionName, requiredKeys["name"]).ToString(sectionName);
 
                 echo($"Registring group module: {Name}");
                 echo($"Found {moduleBlocks.Count} blocks");
@@ -478,7 +478,7 @@ namespace IngameScript
 
                 foreach (string keyName in requiredKeys.Values)
                     if (keys.Find(key => key.Name == keyName) == default(MyIniKey))
-                        exceptionsManager.AddMissingIniKeyException(sectionName, keyName);
+                        exceptionsManager.AddMissingIniKeyException(Name, keyName);
             }
 
 
