@@ -41,7 +41,6 @@ namespace IngameScript
             /// <summary>
             /// Check if current state equals expected state, if no force it
             /// </summary>
-            /// <returns>If the state was forced</returns>
             int CheckState();
             /// <summary>
             /// Toggle the state of the module
@@ -54,7 +53,6 @@ namespace IngameScript
             /// <summary>
             /// Try to fix the module if in error status
             /// </summary>
-            /// <returns>Returns if the module was fixed</returns>
             int TryFixError();
 
             /// <summary>
@@ -72,14 +70,12 @@ namespace IngameScript
             /// Toggle the state of a property
             /// </summary>
             /// <param name="propertyName">The name of the property</param>
-            /// <returns>null if property doesn't exist, true/false if successfull or not</returns>
             int ToggleProperty(string propertyName);
             /// <summary>
             /// Set the state of a property
             /// </summary>
             /// <param name="propertyName">The name of the property</param>
             /// <param name="state">The state to set</param>
-            /// <returns>null if property doesn't exist, true/false if successfull or not</returns>
             int SetProperty(string propertyName, bool state);
         }
     }

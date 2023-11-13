@@ -28,7 +28,7 @@ namespace IngameScript
         readonly bool debug;
         public readonly bool FullLog;
         public const string ScriptName = "[SMS] Ship Management System";
-        public const string ScriptVersion = "V0.5.2";
+        public const string ScriptVersion = "V0.5.3";
         public MyIni Ini = new MyIni();
         public DebugLogs DebugLogsHelper;
         public ScriptExceptions ExceptionsManager;
@@ -176,7 +176,7 @@ namespace IngameScript
             if (CommandLine.ArgumentCount < 3)
             {
                 Echo("Command missing arguments");
-                WriteOutputScreen("Command missing arguments\n", true);
+                WriteOutputScreen("Command missing arguments", true);
                 return;
             }
 
@@ -208,7 +208,7 @@ namespace IngameScript
                     break;
                 default:
                     Echo("Unknow sub-command");
-                    WriteOutputScreen($"Unknow sub-command: {subCommand}\n", true);
+                    WriteOutputScreen($"Unknow sub-command: {subCommand}", true);
                     break;
             }
         }
@@ -217,28 +217,28 @@ namespace IngameScript
         {
             string name = CommandLine.Argument(2);
             Echo($"Module Name: {name}");
-            WriteOutputScreen($"Module name: {name}\n", true);
+            WriteOutputScreen($"Module name: {name}", true);
             IShipModule module = ShipModules.Find(m => m.Name == name);
             if (module == null)
             {
                 Echo("Module not found!");
-                WriteOutputScreen("Module not found!\n", true);
+                WriteOutputScreen("Module not found!", true);
                 return;
             }
             Echo($"Module state: {StatesNames[module.State]}");
-            WriteOutputScreen($"Module state: {StatesNames[module.State]}\n", true);
+            WriteOutputScreen($"Module state: {StatesNames[module.State]}", true);
         }
 
         private void ToggleModuleState()
         {
             string name = CommandLine.Argument(2);
             Echo($"Module Name: {name}");
-            WriteOutputScreen($"Module name: {name}\n", true);
+            WriteOutputScreen($"Module name: {name}", true);
             IShipModule module = ShipModules.Find(m => m.Name == name);
             if (module == null)
             {
                 Echo("Module not found!");
-                WriteOutputScreen("Module not found!\n", true);
+                WriteOutputScreen("Module not found!", true);
                 return;
             }
             switch (module.ToggleState())
@@ -248,16 +248,16 @@ namespace IngameScript
                     Echo($"Module state: {StatesNames[module.State]}");
                     tssAPI.SetModuleState(name, (int)module.State);
                     tssAPI.SetCommandOutput("Module state toggled", false, name, CommandLine.Argument(3));
-                    WriteOutputScreen("Module state toggled\n", true);
-                    WriteOutputScreen($"Module state: {StatesNames[module.State]}\n", true);
+                    WriteOutputScreen("Module state toggled", true);
+                    WriteOutputScreen($"Module state: {StatesNames[module.State]}", true);
                     break;
                 case -1:
                     tssAPI.SetCommandOutput("Action not available! Please wait!", true, name, CommandLine.Argument(3));
-                    WriteOutputScreen("Action not available! Please wait!\n", true);
+                    WriteOutputScreen("Action not available! Please wait!", true);
                     break;
                 case -2:
                     tssAPI.SetCommandOutput("Action not available in the current state!", true, name, CommandLine.Argument(3));
-                    WriteOutputScreen("Action not available in the current state!\n", true);
+                    WriteOutputScreen("Action not available in the current state!", true);
                     break;
             }
         }
@@ -266,12 +266,12 @@ namespace IngameScript
         {
             string name = CommandLine.Argument(2);
             Echo($"Module name: {name}");
-            WriteOutputScreen($"Module name: {name}\n", true);
+            WriteOutputScreen($"Module name: {name}", true);
             IShipModule module = ShipModules.Find(m => m.Name == name);
             if (module == null)
             {
                 Echo("Module not found!");
-                WriteOutputScreen("Module not found!\n", true);
+                WriteOutputScreen("Module not found!", true);
                 return;
             }
             switch (module.SetState(state))
@@ -282,20 +282,20 @@ namespace IngameScript
                     Echo($"Module state: {StatesNames[module.State]}");
                     tssAPI.SetCommandOutput("Module state set", false, name, CommandLine.Argument(3));
                     tssAPI.SetModuleState(name, (int)module.State);
-                    WriteOutputScreen($"Module state set\n", true);
-                    WriteOutputScreen($"Module state: {StatesNames[module.State]}\n", true);
+                    WriteOutputScreen($"Module state set", true);
+                    WriteOutputScreen($"Module state: {StatesNames[module.State]}", true);
                     break;
                 case -1:
                     tssAPI.SetCommandOutput("Action not available! Please wait!", true, name, CommandLine.Argument(3));
-                    WriteOutputScreen("Action not available! Please wait!\n", true);
+                    WriteOutputScreen("Action not available! Please wait!", true);
                     break;
                 case -2:
                     tssAPI.SetCommandOutput("Action not available in the current state!", true, name, CommandLine.Argument(3));
-                    WriteOutputScreen("Action not available in the current state!\n", true);
+                    WriteOutputScreen("Action not available in the current state!", true);
                     break;
                 case -3:
                     tssAPI.SetCommandOutput("Can't change module state", true, name, CommandLine.Argument(3));
-                    WriteOutputScreen("Can't change module state\n", true);
+                    WriteOutputScreen("Can't change module state", true);
                     break;
             }
         }
@@ -304,12 +304,12 @@ namespace IngameScript
         {
             string name = CommandLine.Argument(2);
             Echo($"Module name: {name}");
-            WriteOutputScreen($"Module name: {name}\n", true);
+            WriteOutputScreen($"Module name: {name}", true);
             IShipModule module = ShipModules.Find(m => m.Name == name);
             if (module == null)
             {
                 Echo("Module not found!");
-                WriteOutputScreen("Module not found!\n", true);
+                WriteOutputScreen("Module not found!", true);
                 return;
             }
             switch (module.TryFixError())
@@ -317,7 +317,7 @@ namespace IngameScript
                 case 0:
                     Echo("Module error state not fixed");
                     tssAPI.SetCommandOutput("Module error state not fixed", true, name, CommandLine.Argument(3));
-                    WriteOutputScreen("Module error state not fixed\n", true);
+                    WriteOutputScreen("Module error state not fixed", true);
                     break;
                 case 1:
                     Echo("Module error state fixed");
@@ -325,7 +325,7 @@ namespace IngameScript
                     tssAPI.SetCommandOutput("Module error state fixed", false, name, CommandLine.Argument(3));
                     tssAPI.SetModuleState(name, (int)module.State);
                     WriteOutputScreen("Module error state fixed\n", true);
-                    WriteOutputScreen($"Module state: {StatesNames[module.State]}\n", true);
+                    WriteOutputScreen($"Module state: {StatesNames[module.State]}", true);
                     break;
             }
         }
@@ -365,7 +365,7 @@ namespace IngameScript
                     break;
                 default:
                     Echo("Unknow sub-command");
-                    WriteOutputScreen($"Unknow sub-command: {subCommand}\n", true);
+                    WriteOutputScreen($"Unknow sub-command: {subCommand}", true);
                     break;
             }
         }
@@ -374,43 +374,43 @@ namespace IngameScript
         {
             string moduleName = CommandLine.Argument(2);
             Echo($"Module name: {moduleName}");
-            WriteOutputScreen($"Module name: {moduleName}\n", true);
+            WriteOutputScreen($"Module name: {moduleName}", true);
             IShipModule module = ShipModules.Find(m => m.Name == moduleName);
             if (module == null)
             {
                 Echo("Module not found!");
-                WriteOutputScreen("Module not found!\n", true);
+                WriteOutputScreen("Module not found!", true);
                 return;
             }
             string propertyName = CommandLine.Argument(3);
             Echo($"Property name: {propertyName}");
-            WriteOutputScreen($"Property name: {propertyName}\n", true);
+            WriteOutputScreen($"Property name: {propertyName}", true);
             var state = module.GetProperty(propertyName);
             if (state == null)
             {
                 Echo("Property not found!");
-                WriteOutputScreen("Property not found!\n", true);
+                WriteOutputScreen("Property not found!", true);
                 return;
             }
             Echo($"Property state: {((bool)state ? "Enabled" : "Disabled")}");
-            WriteOutputScreen($"Property state: {((bool)state ? "Enabled" : "Disabled")}\n", true);
+            WriteOutputScreen($"Property state: {((bool)state ? "Enabled" : "Disabled")}", true);
         }
 
         private void ToggleModuleProperty()
         {
             string moduleName = CommandLine.Argument(2);
             Echo($"Module name: {moduleName}");
-            WriteOutputScreen($"Module name: {moduleName}\n", true);
+            WriteOutputScreen($"Module name: {moduleName}", true);
             IShipModule module = ShipModules.Find(m => m.Name == moduleName);
             if (module == null)
             {
                 Echo("Module not found!");
-                WriteOutputScreen("Module not found!\n", true);
+                WriteOutputScreen("Module not found!", true);
                 return;
             }
             string propertyName = CommandLine.Argument(3);
             Echo($"Property name: {propertyName}");
-            WriteOutputScreen($"Property name: {propertyName}\n", true);
+            WriteOutputScreen($"Property name: {propertyName}", true);
             HandleModulePropertyReturn(module.ToggleProperty(propertyName), module, propertyName);
         }
 
@@ -418,17 +418,17 @@ namespace IngameScript
         {
             string moduleName = CommandLine.Argument(2);
             Echo($"Module name: {moduleName}");
-            WriteOutputScreen($"Module name: {moduleName}\n", true);
+            WriteOutputScreen($"Module name: {moduleName}", true);
             IShipModule module = ShipModules.Find(m => m.Name == moduleName);
             if (module == null)
             {
                 Echo("Module not found!");
-                WriteOutputScreen("Module not found!\n", true);
+                WriteOutputScreen("Module not found!", true);
                 return;
             }
             string propertyName = CommandLine.Argument(3);
             Echo($"Property name: {propertyName}");
-            WriteOutputScreen($"Property name: {propertyName}\n", true);
+            WriteOutputScreen($"Property name: {propertyName}", true);
             HandleModulePropertyReturn(module.SetProperty(propertyName, state), module, propertyName);
         }
 
@@ -442,30 +442,30 @@ namespace IngameScript
                     tssAPI.SetCommandOutput("Property state changed", false, module.Name, CommandLine.Argument(4));
                     tssAPI.SetPropertyState(module.Name, propertyName, (bool)module.GetProperty(propertyName));
                     tssAPI.SetModuleState(module.Name, (int)module.State);
-                    WriteOutputScreen("Property state changed!\n", true);
-                    WriteOutputScreen($"Property state: {((bool)module.GetProperty(propertyName) ? "Enabled" : "Disabled")}\n", true);
+                    WriteOutputScreen("Property state changed!", true);
+                    WriteOutputScreen($"Property state: {((bool)module.GetProperty(propertyName) ? "Enabled" : "Disabled")}", true);
                     break;
                 case -1:
                     tssAPI.SetCommandOutput("Action not available! Please wait!", true, module.Name, CommandLine.Argument(4));
-                    WriteOutputScreen("Action not available! Please wait!\n", true);
+                    WriteOutputScreen("Action not available! Please wait!", true);
                     break;
                 case -2:
                     tssAPI.SetCommandOutput("Action not available in the current state!", true, module.Name, CommandLine.Argument(4));
-                    WriteOutputScreen("Action not available in the current state!\n", true);
+                    WriteOutputScreen("Action not available in the current state!", true);
                     break;
                 case -3:
                     Echo($"Error: Property {propertyName} not found!");
-                    WriteOutputScreen("Property not found!\n", true);
+                    WriteOutputScreen("Property not found!", true);
                     break;
                 case -4:
                     tssAPI.SetModuleState(module.Name, (int)module.State);
                     tssAPI.SetCommandOutput("Wrong property! Sequence not respected!", true, module.Name, CommandLine.Argument(4));
-                    WriteOutputScreen("Wrong property! Sequence not respected!\n", true);
+                    WriteOutputScreen("Wrong property! Sequence not respected!", true);
                     break;
                 case -5:
                     tssAPI.SetModuleState(module.Name, (int)module.State);
                     tssAPI.SetCommandOutput("Wrong state! Sequence not respected!", true, module.Name, CommandLine.Argument(4));
-                    WriteOutputScreen("Wrong state! Sequence not respected!\n", true);
+                    WriteOutputScreen("Wrong state! Sequence not respected!", true);
                     break;
             }
         }
@@ -508,10 +508,16 @@ namespace IngameScript
                 case 2:
                     tssAPI.SetModuleState(module.Name, (int)module.State);
                     tssAPI.SetCheckOutput("Module enabled!", module.Name);
+                    ClearOutputScreen();
+                    WriteOutputScreen($"Module name: {module.Name}");
+                    WriteOutputScreen($"Module enabled!");
                     break;
                 case 3:
                     tssAPI.SetModuleState(module.Name, (int)module.State);
                     tssAPI.SetCheckOutput("Module disabled!", module.Name);
+                    ClearOutputScreen();
+                    WriteOutputScreen($"Module name: {module.Name}");
+                    WriteOutputScreen($"Module disabled!");
                     break;
             }
 
@@ -520,7 +526,7 @@ namespace IngameScript
 
         private void ClearOutputScreen()
         {
-            outputScreen?.WriteText($"[SMS] Ship Management System - {ScriptVersion}\n", false);
+            outputScreen?.WriteText($"[SMS] Ship Management System - {ScriptVersion}\n\n", false);
         }
 
         private void WriteOutputScreen(string text, bool append = true)
