@@ -28,7 +28,7 @@ namespace IngameScript
         readonly bool debug;
         public readonly bool FullLog;
         public const string ScriptName = "[SMS] Ship Management System";
-        public const string ScriptVersion = "V0.6.0";
+        public const string ScriptVersion = "V0.6.1";
         public MyIni Ini = new MyIni();
         public DebugLogs DebugLogsHelper;
         public ScriptExceptions ExceptionsManager;
@@ -83,7 +83,11 @@ namespace IngameScript
             // Cache grid blocks whit script config
             Echo("Cache single block modules");
             List<IMyFunctionalBlock> singleBlockModules = new List<IMyFunctionalBlock>();
-            GridTerminalSystem.GetBlocksOfType(singleBlockModules, block => MyIni.HasSection(block.CustomData, "SMS - Module"));
+            GridTerminalSystem.GetBlocksOfType(singleBlockModules, block => {
+                if (!block.IsSameConstructAs(Me))
+                    return false;
+                return MyIni.HasSection(block.CustomData, "SMS - Module");
+            });
 
             Echo("Cache block group modules");
             List<string> sections = new List<string>();
