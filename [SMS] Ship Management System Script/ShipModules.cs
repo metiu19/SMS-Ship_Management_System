@@ -29,6 +29,7 @@ namespace IngameScript
             Enabled = 1,
             GoingDown = 2,
             ComingUp = 3,
+            Standby = 4,
         }
         public static readonly Dictionary<States, string> StatesNames = new Dictionary<States, string>()
         {
@@ -37,6 +38,7 @@ namespace IngameScript
             { States.Enabled, "Enabled" },
             { States.GoingDown, "Shutting Down" },
             { States.ComingUp, "Starting Up" },
+            { States.Standby, "Standby" },
         };
 
         public abstract class ShipModuleBase : IShipModule
@@ -53,6 +55,7 @@ namespace IngameScript
                 {"down", "Shutdown"},
                 {"defState", "Default State"},
                 {"coolDelay", "Cooldown Delay"},
+                {"standby", "Standby"},
             };
 
             protected List<ModuleProperty> properties;
@@ -63,6 +66,7 @@ namespace IngameScript
             protected double cooldownDelay;
             protected int lastActionIndex;
             protected bool enabled;
+            protected bool supportStandby;
 
             public string Name { get; protected set; }
             public States State { get; protected set; }
@@ -96,6 +100,9 @@ namespace IngameScript
 
                 // Cooldown delay
                 this.cooldownDelay = ini.Get(sectionName, requiredKeys["coolDelay"]).ToDouble();
+
+                // Support Standby
+                this.supportStandby = ini.Get(sectionName, requiredKeys["standby"]).ToBoolean();
 
                 // Register module properties
                 echo("Register module properties");
@@ -226,7 +233,7 @@ namespace IngameScript
 
                 if (State == States.Disabled)
                     Startup();
-                else if (State == States.Enabled)
+                else if (State == States.Enabled || State == States.Standby)
                     Shutdown();
                 else
                 {
@@ -255,7 +262,7 @@ namespace IngameScript
                     Startup();
                     return 1;
                 }
-                else if (!state && State == States.Enabled)
+                else if (!state && (State == States.Enabled || State == States.Standby))
                 {
                     Shutdown();
                     return 2;
@@ -302,6 +309,35 @@ namespace IngameScript
                 }
                 echo("Could not restore default state!\nNot all properties were reseted to the default value");
                 return 0;
+            }
+
+            public int Standby()
+            {
+                if (!supportStandby)
+                    return 0;
+
+                if (program.Time < delayTarget)
+                {
+                    echo($"Action not available!\nWait: {delayTarget - program.Time} s");
+                    return -1;
+                }
+
+                if (State == States.Standby)
+                {
+                    State = States.Enabled;
+                    enabled = true;
+                } else if (State == States.Enabled)
+                {
+                    State = States.Standby;
+                    enabled = false;
+                }
+                else
+                {
+                    echo($"Action not available in the current state!\nCurrent State: {StatesNames[State]}");
+                    return -2;
+                }
+
+                return 1;
             }
 
 

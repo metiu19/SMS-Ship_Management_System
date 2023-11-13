@@ -54,6 +54,10 @@ namespace IngameScript
             /// Try to fix the module if in error status
             /// </summary>
             int TryFixError();
+            /// <summary>
+            /// Quick module toggle
+            /// </summary>
+            int Standby();
 
             /// <summary>
             /// Get all the properties of this module

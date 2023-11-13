@@ -28,7 +28,7 @@ namespace IngameScript
         readonly bool debug;
         public readonly bool FullLog;
         public const string ScriptName = "[SMS] Ship Management System";
-        public const string ScriptVersion = "V0.5.3";
+        public const string ScriptVersion = "V0.6.0";
         public MyIni Ini = new MyIni();
         public DebugLogs DebugLogsHelper;
         public ScriptExceptions ExceptionsManager;
@@ -206,6 +206,10 @@ namespace IngameScript
                 case "repaire":
                     FixModuleState();
                     break;
+                case "pause":
+                case "standby":
+                    StandbyModule();
+                    break;
                 default:
                     Echo("Unknow sub-command");
                     WriteOutputScreen($"Unknow sub-command: {subCommand}", true);
@@ -326,6 +330,43 @@ namespace IngameScript
                     tssAPI.SetModuleState(name, (int)module.State);
                     WriteOutputScreen("Module error state fixed\n", true);
                     WriteOutputScreen($"Module state: {StatesNames[module.State]}", true);
+                    break;
+            }
+        }
+
+        private void StandbyModule()
+        {
+            string name = CommandLine.Argument(2);
+            Echo($"Module name: {name}");
+            WriteOutputScreen($"Module name: {name}", true);
+            IShipModule module = ShipModules.Find(m => m.Name == name);
+            if (module == null)
+            {
+                Echo("Module not found!");
+                WriteOutputScreen("Module not found!", true);
+                return;
+            }
+            switch (module.Standby())
+            {
+                case 0:
+                    Echo("Standby not supported!");
+                    tssAPI.SetCommandOutput("Standby not supported!", true, name, CommandLine.Argument(3));
+                    WriteOutputScreen("Standby not supported!");
+                    break;
+                case 1:
+                    Echo("Module standby toggled!");
+                    tssAPI.SetModuleState(name, (int)module.State);
+                    tssAPI.SetCommandOutput("Module standby toggled!", false, name, CommandLine.Argument(3));
+                    WriteOutputScreen("Module standby toggled!");
+                    WriteOutputScreen($"Module state: {StatesNames[module.State]}");
+                    break;
+                case -1:
+                    tssAPI.SetCommandOutput("Action not available! Please wait!", true, name, CommandLine.Argument(3));
+                    WriteOutputScreen("Action not available! Please wait!", true);
+                    break;
+                case -2:
+                    tssAPI.SetCommandOutput("Action not available in the current state!", true, name, CommandLine.Argument(3));
+                    WriteOutputScreen("Action not available in the current state!", true);
                     break;
             }
         }
